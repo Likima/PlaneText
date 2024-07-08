@@ -4,6 +4,34 @@
 #include <regex>
 #include "../globals.hpp"
 
-Lexer lex;
+enum TokenType
+{
+    DATATYPE,
+    KEYWORD,
+    IDENTIFIER,
+    NUMBER,
+    STRING,
+    OPERATOR,
+    DELIMITER,
+    COMMENT,
+    NEWLINE,
+    UNKNOWN
+};
+
+struct Token
+{
+    TokenType type;
+    std::string text;
+};
+
+class Lexer
+{
+private:
+    std::vector<Token> tokenized_code;
+
+public:
+    void printTokenized();
+    void TokenizeLine(std::string &code);
+};
 
 #endif

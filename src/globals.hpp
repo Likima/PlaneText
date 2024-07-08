@@ -5,31 +5,8 @@
 #include <vector>
 #include <string>
 
-enum TokenType
-{
-    KEYWORD,
-    IDENTIFIER,
-    NUMBER,
-    STRING,
-    OPERATOR,
-    DELIMITER,
-    COMMENT,
-    UNKNOWN
-};
+extern std::vector<std::string> splitBySpacesAndBrackets(const std::string &code);
 
-struct Token
-{
-    TokenType type;
-    std::string text;
-};
-
-class Lexer {
-    private:
-        
-    public:
-        std::vector<Token> tokenized_code;
-};
-
-extern Lexer lex;
+extern void printvec(std::vector<std::string> &s);
 
 #endif
