@@ -11,10 +11,9 @@ const std::vector<std::pair<TokenType, std::regex>> TokenDefinitions = {
                          "protected|public|reflexpr|reinterpret_cast|requires|static_assert|static_cast|synchronized|"
                          "template|this|thread_local|throw|true|try|typeid|typename|using|virtual|wchar_t|xor|xor_eq)\\b")},
     {IDENTIFIER, std::regex("\\b[a-zA-Z_][a-zA-Z0-9_]*\\b")},
-    {NUMBER, std::regex("\\b[0-9]+|#include\\b")},
-    {STRING, std::regex("\"[^\"]*\"|'[^']*'")},
+    {LITERAL, std::regex("\\b[0-9]+|\"[^\"]*\"|'[^']*'\\b")},
     {OPERATOR, std::regex("[+\\-*/=]")},
-    {DELIMITER, std::regex("[(){};] ")},
+    {DELIMITER, std::regex("[(){};],.")},
     {COMMENT, std::regex("//[^\n]*$")},
     {NEWLINE, std::regex("[newline]")}};
 
@@ -35,14 +34,9 @@ void Lexer::printTokenized()
             type = "identifier";
         }
         break;
-        case (NUMBER):
+        case (LITERAL):
         {
             type = "number";
-        }
-        break;
-        case (STRING):
-        {
-            type = "string";
         }
         break;
         case (OPERATOR):
