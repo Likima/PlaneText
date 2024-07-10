@@ -1,10 +1,11 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include "../Lexer/lexer.hpp"
+//#include "../Lexer/lexer.hpp"
 #include "../globals.hpp"
 
 #include <variant>
+#include <memory>
 
 struct LiteralExpr;
 struct VariableExpr;

@@ -11,6 +11,10 @@ void printvec(std::vector<std::string> &s)
     std::cout << std::endl;
 }
 
+#include <string>
+#include <vector>
+#include <cctype>
+
 std::vector<std::string> splitBySpacesAndBrackets(const std::string &code)
 {
     std::vector<std::string> strings;
@@ -23,11 +27,6 @@ std::vector<std::string> splitBySpacesAndBrackets(const std::string &code)
     for (size_t i = 0; i < code.length(); ++i)
     {
         char c = code[i];
-        if (c == '\n')
-        {
-            strings.push_back("[newline]");
-            continue;
-        }
         if (isInComment)
         {
             currentString += c;
@@ -43,12 +42,20 @@ std::vector<std::string> splitBySpacesAndBrackets(const std::string &code)
         if (isInString)
         {
             currentString += c;
-            if (c == '\"')
+            if (c == '\"' || c == '\n')
             {
                 strings.push_back(currentString);
                 currentString.clear();
+                strings.push_back("[newline]");
+                currentString.clear();
                 isInString = false;
             }
+            continue;
+        }
+
+        if (c == '\n')
+        {
+            strings.push_back("[newline]");
             continue;
         }
 
@@ -73,6 +80,17 @@ std::vector<std::string> splitBySpacesAndBrackets(const std::string &code)
             }
             strings.push_back(" ");
             isSpace = true;
+            continue;
+        }
+
+        if (std::isdigit(c) || (c == '.' && !currentString.empty() && std::isdigit(currentString.back())))
+        {
+            if (!currentString.empty() && !(std::isdigit(currentString.back()) || currentString.back() == '.'))
+            {
+                strings.push_back(currentString);
+                currentString.clear();
+            }
+            currentString += c;
             continue;
         }
 
