@@ -1,44 +1,60 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-//#include "../Lexer/lexer.hpp"
+#include <memory>
+#include "../Lexer/lexer.hpp"
 #include "../globals.hpp"
 
-#include <variant>
-#include <memory>
+class GenericNode {
+private:
+    Token GenericTok;
+public:
+    GenericNode(Token tok) : GenericTok(tok) {}
+    virtual ~GenericNode() {}
+    
+    Token getToken() const { return GenericTok; }
+};
 
-struct LiteralExpr;
-struct VariableExpr;
-struct UnaryExpr;
-struct BinaryExpr;
-struct IfExpr;
+// Classifies a Number Node
 
-using Expr = std::variant<LiteralExpr, VariableExpr, UnaryExpr, BinaryExpr, IfExpr>;
-using ExprHandle = std::unique_ptr<Expr>;
+class NumNode : public GenericNode {
+private:
+    Token NumNodeTok;
+public:
+    NumNode(Token tok) : GenericNode(tok), NumNodeTok(tok) {} // Constructor
+    ~NumNode() {} // Destructor
+};
 
-//struct LiteralExpr {
-//  Literal lit;
-//};
-//
-//struct VariableExpr {
-//  std::string ident;
-//};
-//
-//struct UnaryExpr {
-//  UnaryOp op;
-//  ExprHandle expr;
-//};
-//
-//struct BinaryExpr {
-//  BinaryOp op;
-//  ExprHandle lhs;
-//  ExprHandle rhs;
-//};
-//
-//struct IfExpr {
-//  ExprHandle cond_expr;
-//  ExprHandle if_expr;
-//  ExprHandle else_expr;
-//};
+// Classifies a BINARY OPERATION
 
-#endif
+class BinOpNode {
+private:
+    Token BinOpTok;
+    std::shared_ptr<GenericNode> LNode;
+    std::shared_ptr<GenericNode> RNode; 
+public:
+    BinOpNode(Token tok, std::shared_ptr<GenericNode> left, std::shared_ptr<GenericNode> right)
+        : BinOpTok(tok), LNode(left), RNode(right) {}
+
+    Token getToken() const { return BinOpTok; }
+    std::shared_ptr<GenericNode> getLeftNode() const { return LNode; }
+    std::shared_ptr<GenericNode> getRightNode() const { return RNode; }
+};
+
+// PARSER CLASS
+
+class Parser {
+private:
+    std::vector<Token> tokenList;
+    std::vector<std::shared_ptr<GenericNode>> classifiedNodes;
+    int token_idx = 0;
+    Token current_token;
+
+    void advance();
+    void classifyToken();
+public:
+    void processTokens(std::vector<Token> tokens) { tokenList = tokens }
+    
+};
+
+#endif // PARSER_HPP

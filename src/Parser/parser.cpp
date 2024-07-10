@@ -1,10 +1,14 @@
 #include "parser.hpp"
 
-/*
-#include "./Lexer/lexer.hpp"
+void Parser::advance() {
+    // used to parse each token individually.
+    if(token_idx < tokenList) {
+        current_token = tokenList[token_idx];
+        token_idx++;
+    }
+    return(current_token);
+}
 
-Lexer lex;
-    std::string helloworld = "\"Hello world\" +\n  HELLO";
-    lex.TokenizeLine(helloworld);
-    lex.printTokenized();
-*/
+void Parser::classifiedNodes() {
+    
+}

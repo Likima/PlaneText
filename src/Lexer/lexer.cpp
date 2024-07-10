@@ -43,7 +43,7 @@ void Lexer::printTokenized()
 {
     for (const auto &i : tokenized_code)
     {
-        std::string type = "REFACTORING"; // change later
+        std::string type;
         switch (i.type)
         {
             case DATATYPE: type = "datatype"; break;
