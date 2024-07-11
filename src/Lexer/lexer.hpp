@@ -20,10 +20,13 @@ enum TokenType
     NEWLINE, UNKNOWN
 };
 
-struct Token
+class Token
 {
+public:
     TokenType type;
+    std::string type_string;
     std::string text;
+    void printToken() {std::cout << type_string<< ": " << text << std::endl;}
 };
 
 class Lexer
@@ -32,7 +35,8 @@ private:
     std::vector<Token> tokenized_code;
 
 public:
-    void printTokenized();
+    void assignTokenizedString();
+    void printLexer();
     void TokenizeLine(std::string &code);
 };
 

@@ -13,6 +13,8 @@ public:
     virtual ~GenericNode() {}
     
     Token getToken() const { return GenericTok; }
+
+    virtual void printTok() { GenericTok.printToken(); }
 };
 
 // Classifies a Number Node
@@ -23,6 +25,8 @@ private:
 public:
     NumNode(Token tok) : GenericNode(tok), NumNodeTok(tok) {} // Constructor
     ~NumNode() {} // Destructor
+
+    void printTok() { NumNodeTok.printToken(); }
 };
 
 // Classifies a BINARY OPERATION
@@ -39,6 +43,10 @@ public:
     Token getToken() const { return BinOpTok; }
     std::shared_ptr<GenericNode> getLeftNode() const { return LNode; }
     std::shared_ptr<GenericNode> getRightNode() const { return RNode; }
+    void printBinOpNode() { std::cout << "(" << LNode->getToken().type_string << " : " << LNode->getToken().text <<
+                            BinOpTok.type_string << " : " <<  BinOpTok.text << 
+                            RNode->getToken().type_string << " : " << RNode->getToken().text << std::endl; }
+                
 };
 
 // PARSER CLASS
@@ -51,7 +59,10 @@ private:
     Token current_token;
 
     void advance();
-    void classifyToken();
+    void parse();
+    NumNode factor();
+    void term();
+    void expr();
 public:
     void processTokens(std::vector<Token> tokens) { tokenList = tokens }
     

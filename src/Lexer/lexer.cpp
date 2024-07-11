@@ -39,12 +39,12 @@ const std::vector<std::pair<TokenType, std::regex>> TokenDefinitions = {
 };
 
 
-void Lexer::printTokenized()
+void Lexer::assignTokenizedString()
 {
-    for (const auto &i : tokenized_code)
+    for (int i = 0; i < tokenized_code.size(); i++)
     {
         std::string type;
-        switch (i.type)
+        switch (tokenized_code[i].type)
         {
             case DATATYPE: type = "datatype"; break;
             case KEYWORD: type = "keyword"; break;
@@ -76,7 +76,14 @@ void Lexer::printTokenized()
             case UNKNOWN: type = "undefined"; break;
             default: type = "undefined";
         }
-        std::cout << "TYPE: " << type << " TEXT: " << i.text << std::endl;
+        tokenized_code[i].type_string=type;
+    }
+}
+
+void Lexer::printLexer()
+{
+    for(auto &i : tokenized_code) {
+        i.printToken();
     }
 }
 
