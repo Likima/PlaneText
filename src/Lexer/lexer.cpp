@@ -35,9 +35,7 @@ const std::vector<std::pair<TokenType, std::regex>> TokenDefinitions = {
     {TT_NULL, std::regex("\\b(null)\\b")},
     {COMMENT, std::regex("//[^\n]*$")},
     {NEWLINE, std::regex("[newline]|;")},
-    {UNKNOWN, std::regex("")}
-};
-
+    {UNKNOWN, std::regex("")}};
 
 void Lexer::assignTokenizedString()
 {
@@ -46,61 +44,85 @@ void Lexer::assignTokenizedString()
         std::string type;
         switch (tokenized_code[i].type)
         {
-            case DATATYPE: type = "datatype"; break;
-            case KEYWORD: type = "keyword"; break;
-            case IDENTIFIER: type = "identifier"; break;
-            case TT_STRING: type = "string"; break;
-            case TT_INT: type = "number"; break;
-            case TT_FLOAT: type = "float"; break;
-            case TT_ADD:
-            case TT_SUB:
-            case TT_MUL:
-            case TT_DIV:
-            case TT_EQL: 
-            case TT_GTR:
-            case TT_LST:
-            case TT_NOT:
-                type = "operator"; break;
-            case TT_LPAREN:
-            case TT_RPAREN:
-            case TT_LBRACE:
-            case TT_RBRACE:
-            case TT_LBRACK:
-            case TT_RBRACK:
-            case TT_COMMA:
-            case TT_PERIOD: 
-                type = "delimiter"; break;
-            case TT_NULL: type = "literal"; break;
-            case COMMENT: type = "comment"; break;
-            case NEWLINE: type = "newline"; break;
-            case UNKNOWN: type = "undefined"; break;
-            default: type = "undefined";
+        case DATATYPE:
+            type = "datatype";
+            break;
+        case KEYWORD:
+            type = "keyword";
+            break;
+        case IDENTIFIER:
+            type = "identifier";
+            break;
+        case TT_STRING:
+            type = "string";
+            break;
+        case TT_INT:
+            type = "number";
+            break;
+        case TT_FLOAT:
+            type = "float";
+            break;
+        case TT_ADD:
+        case TT_SUB:
+        case TT_MUL:
+        case TT_DIV:
+        case TT_EQL:
+        case TT_GTR:
+        case TT_LST:
+        case TT_NOT:
+            type = "operator";
+            break;
+        case TT_LPAREN:
+        case TT_RPAREN:
+        case TT_LBRACE:
+        case TT_RBRACE:
+        case TT_LBRACK:
+        case TT_RBRACK:
+        case TT_COMMA:
+        case TT_PERIOD:
+            type = "delimiter";
+            break;
+        case TT_NULL:
+            type = "literal";
+            break;
+        case COMMENT:
+            type = "comment";
+            break;
+        case NEWLINE:
+            type = "newline";
+            break;
+        case UNKNOWN:
+            type = "undefined";
+            break;
+        default:
+            type = "undefined";
         }
-        tokenized_code[i].type_string=type;
+        tokenized_code[i].type_string = type;
     }
 }
 
 void Lexer::printLexer()
 {
-    for(auto &i : tokenized_code) {
-        i.printToken();
+    for (auto &i : tokenized_code)
+    {
+        i.printTokenWithoutEndl();
     }
 }
 
 Token tokenizeSingleWord(const std::string &word)
 {
     for (const auto &definition : TokenDefinitions)
-    {   
+    {
         if (std::regex_match(word, definition.second))
         {
-            return {definition.first, word};
+            return Token(definition.first, word);
         }
     }
     // Default case if no match found
     return {UNKNOWN, word}; // Assuming it's an identifier if not matched (CLASSIFIES SPACES)
 }
 
-void Lexer::TokenizeLine(std::string &code)
+std::vector<Token> Lexer::TokenizeLine(std::string &code)
 {
     std::sregex_iterator end;
     std::vector<std::string> split_vec = splitBySpacesAndBrackets(code);
@@ -111,4 +133,6 @@ void Lexer::TokenizeLine(std::string &code)
         if (t.type != UNKNOWN)
             tokenized_code.push_back(t);
     }
+    assignTokenizedString();
+    return (tokenized_code);
 }

@@ -2,10 +2,14 @@
 #include "./Parser/parser.hpp"
 #include "./Lexer/lexer.hpp"
 Lexer lex;
+Parser par;
 int main()
 {
-    std::string hello = "hello world! 1 + 1 = 323 testing float 300.0";
-    lex.TokenizeLine(hello);
-    lex.printTokenized();
+    std::vector<Token> tokenized;
+    std::string hello = "4 + 3 * 5 * 3 + 5";
+    tokenized = lex.TokenizeLine(hello);
+    lex.printLexer();
+    std::cout << std::endl;
+    par.parse(tokenized);
     return 0;
 }
