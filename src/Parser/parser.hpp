@@ -39,6 +39,19 @@ public:
     void printNode() const override { NumNodeTok.printTokenWithoutEndl(); }
 };
 
+class UnaryOpNode : public GenericNode
+{
+private:
+    Token UnOpTok;
+
+public:
+    UnaryOpNode(Token tok) : GenericNode(tok), UnOpTok(tok){}; // Constructor
+    ~UnaryOpNode() {}
+
+    Token getToken() const override { return UnOpTok; }
+    void printNode() const override { UnOpTok.printTokenWithoutEndl(); }
+};
+
 // Classifies a BINARY OPERATION
 class BinOpNode : public GenericNode
 {

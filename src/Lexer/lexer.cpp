@@ -14,7 +14,7 @@ const std::vector<std::pair<TokenType, std::regex>> TokenDefinitions = {
     {IDENTIFIER, std::regex("\\b[a-zA-Z_][a-zA-Z0-9_]*\\b")},
     {TT_STRING, std::regex("\"[^\"]*\"|'[^']*'\\b")},
     {TT_BOOL, std::regex("\\b(true|false)\\b")},
-    {TT_INT, std::regex("\\b[0-9]+\\b")},
+    {TT_INT, std::regex("\\b([0-9]+)\\b")},
     {TT_FLOAT, std::regex("\\b([0-9]*\\.[0-9]+|[0-9]+\\.[0-9]*)\\b")},
     {TT_ADD, std::regex("\\+")},
     {TT_SUB, std::regex("\\-")},

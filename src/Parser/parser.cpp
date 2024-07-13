@@ -1,9 +1,10 @@
 #include "parser.hpp"
+#include "../errors.hpp"
 
 void Parser::advance()
 {
     // used to parse each token individually.
-    if (this->token_idx < this->tokenList.size() - 1)
+    if (this->token_idx < this->tokenList.size() - 2)
     {
         this->token_idx++;
         this->current_token = tokenList[this->token_idx];

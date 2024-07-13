@@ -85,7 +85,7 @@ std::vector<std::string> splitBySpacesAndBrackets(const std::string &code)
 
         if (std::isdigit(c) || (c == '.' && !currentString.empty() && std::isdigit(currentString.back())))
         {
-            if (!currentString.empty() && !(std::isdigit(currentString.back()) || currentString.back() == '.'))
+            if (currentString != "-" && !currentString.empty() && !(std::isdigit(currentString.back()) || currentString.back() == '.'))
             {
                 strings.push_back(currentString);
                 currentString.clear();

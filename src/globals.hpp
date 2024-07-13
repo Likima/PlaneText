@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 
 extern std::vector<std::string> splitBySpacesAndBrackets(const std::string &code);
 
