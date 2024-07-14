@@ -14,8 +14,8 @@ const std::vector<std::pair<TokenType, std::regex>> TokenDefinitions = {
     {IDENTIFIER, std::regex("\\b[a-zA-Z_][a-zA-Z0-9_]*\\b")},
     {TT_STRING, std::regex("\"[^\"]*\"|'[^']*'\\b")},
     {TT_BOOL, std::regex("\\b(true|false)\\b")},
-    {TT_INT, std::regex("\\b([0-9]+)\\b")},
-    {TT_FLOAT, std::regex("\\b([0-9]*\\.[0-9]+|[0-9]+\\.[0-9]*)\\b")},
+    {TT_INT, std::regex("\\b(^[\\-|\\+]?[0-9]+)\\b")},
+    {TT_FLOAT, std::regex("\\b-?[0-9]*\\.[0-9]+|[0-9]+\\.[0-9]*\\b")},
     {TT_ADD, std::regex("\\+")},
     {TT_SUB, std::regex("\\-")},
     {TT_MUL, std::regex("\\*")},
@@ -111,6 +111,7 @@ void Lexer::printLexer()
 
 Token tokenizeSingleWord(const std::string &word)
 {
+    std::cout<<word<<std::endl;
     for (const auto &definition : TokenDefinitions)
     {
         if (std::regex_match(word, definition.second))
@@ -130,8 +131,11 @@ std::vector<Token> Lexer::TokenizeLine(std::string &code)
     for (const auto &word : split_vec)
     {
         Token t = tokenizeSingleWord(word);
+        t.printToken();
         if (t.type != UNKNOWN)
             tokenized_code.push_back(t);
+        //else
+        //    std::cout << word << std::endl;
     }
     assignTokenizedString();
     return (tokenized_code);

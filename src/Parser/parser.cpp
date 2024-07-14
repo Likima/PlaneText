@@ -1,5 +1,45 @@
 #include "parser.hpp"
-#include "../errors.hpp"
+
+// ---------------------------
+// WRAPPER DEFINITIONS
+// ---------------------------
+
+/*
+    Wrapper &success(std::shared_ptr<GenericNode>);
+    Wrapper &failure(Error e);
+    std::shared_ptr<GenericNode> reg(std::variant<std::shared_ptr<GenericNode>, Wrapper>);
+*/
+
+Wrapper &Wrapper::success(std::shared_ptr<GenericNode> node)
+{
+    this->node = node;
+    return *this;
+}
+
+Wrapper &Wrapper::failure(std::shared_ptr<Error> e)
+{
+    this->err = e;
+    return *this;
+}
+
+std::shared_ptr<GenericNode> Wrapper::reg(std::variant<std::shared_ptr<GenericNode>, Wrapper> v)
+{
+    if (std::holds_alternative<Wrapper>(v))
+    {
+        Wrapper wrapper = std::get<Wrapper>(v);
+        auto err = wrapper.getWrapperErr()->getErr();
+        if (err != nullptr)
+        {
+            this->err = err;
+        }
+        return wrapper.node;
+    }
+    return std::get<std::shared_ptr<GenericNode>>(v);
+}
+
+// ---------------------------
+// PARSER DEFINITIONS
+// ---------------------------
 
 void Parser::advance()
 {

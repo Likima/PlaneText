@@ -1,13 +1,15 @@
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
-#include <memory>
 #include "../Lexer/lexer.hpp"
 #include "../globals.hpp"
+#include "../errors.hpp"
 
 #include <iostream>
 #include <memory>
+#include <variant>
 
+/// Class for inheritence purposes
 class GenericNode
 {
 private:
@@ -50,6 +52,21 @@ public:
 
     Token getToken() const override { return UnOpTok; }
     void printNode() const override { UnOpTok.printTokenWithoutEndl(); }
+};
+
+class Wrapper
+{
+private:
+    std::shared_ptr<GenericNode> node;
+    std::shared_ptr<Error> err;
+
+public:
+    Wrapper(){}; // Constructor
+    std::shared_ptr<GenericNode> getNode() { return node; }
+    std::shared_ptr<Error> getWrapperErr() { return err; }
+    Wrapper &success(std::shared_ptr<GenericNode>);
+    Wrapper &failure(std::shared_ptr<Error> e);
+    std::shared_ptr<GenericNode> reg(std::variant<std::shared_ptr<GenericNode>, Wrapper>);
 };
 
 // Classifies a BINARY OPERATION
