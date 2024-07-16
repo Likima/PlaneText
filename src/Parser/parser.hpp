@@ -14,17 +14,17 @@ class GenericNode
 {
 private:
     Token GenericTok;
+    std::shared_ptr<Error> err = nullptr;
 
 public:
     GenericNode(Token tok) : GenericTok(tok) {}
     virtual ~GenericNode() {}
 
     virtual Token getToken() const { return GenericTok; }
-    virtual void printNode() const
-    {
-        std::cout << "here" << std::endl;
-        GenericTok.printTokenWithoutEndl();
-    }
+    virtual void printNode() const { GenericTok.printTokenWithoutEndl(); }
+    
+    void setErr(std::shared_ptr<Error> e) { err = e; }
+    std::shared_ptr<Error> getErr() { return err; }
 };
 
 // Classifies a Number Node
@@ -54,20 +54,23 @@ public:
     void printNode() const override { UnOpTok.printTokenWithoutEndl(); }
 };
 
-class Wrapper
-{
-private:
-    std::shared_ptr<GenericNode> node;
-    std::shared_ptr<Error> err;
+// class Wrapper : public GenericNode
+// {
+// private:
+//     std::shared_ptr<GenericNode> node;
+//     std::shared_ptr<Error> err;
 
-public:
-    Wrapper(){}; // Constructor
-    std::shared_ptr<GenericNode> getNode() { return node; }
-    std::shared_ptr<Error> getWrapperErr() { return err; }
-    Wrapper &success(std::shared_ptr<GenericNode>);
-    Wrapper &failure(std::shared_ptr<Error> e);
-    std::shared_ptr<GenericNode> reg(std::variant<std::shared_ptr<GenericNode>, Wrapper>);
-};
+// public:
+//     Token getToken() const override { return node->getToken(); }
+//     void printNode() const override { node->getToken().printTokenWithoutEndl(); }
+
+//     Wrapper(){}; // Constructor
+//     std::shared_ptr<GenericNode> getNode() { return node; }
+//     std::shared_ptr<Error> getWrapperErr() { return err; }
+//     Wrapper &success(std::shared_ptr<GenericNode>);
+//     Wrapper &failure(std::shared_ptr<Error> e);
+//     std::shared_ptr<GenericNode> reg(std::variant<std::shared_ptr<GenericNode>, Wrapper>);
+// };
 
 // Classifies a BINARY OPERATION
 class BinOpNode : public GenericNode
@@ -113,6 +116,7 @@ private:
     std::shared_ptr<GenericNode> binop(std::shared_ptr<GenericNode> (Parser::*func)(), const std::vector<TokenType> &op_types);
 
 public:
+    Parser() {};
     void processTokens(std::vector<Token> tokens) { tokenList = tokens; }
     void parse(std::vector<Token> tList);
 };

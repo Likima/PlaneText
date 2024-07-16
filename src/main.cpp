@@ -17,13 +17,10 @@ bool read_from_file(std::string &file_name)
     // Open the file
     std::ifstream file(file_name);
     if (!file.is_open())
-    {
         return false;
-    }
 
     // Read each line from the file and add it to e.lines vector
     std::string line;
-    int space_count = 0;
     while (std::getline(file, line))
     {
         lines.push_back(line);
@@ -39,7 +36,6 @@ bool read_from_file(std::string &file_name)
 
     // Close the file
     file.close();
-
     return true;
 }
 
@@ -56,10 +52,9 @@ int main(int argc, char **argv)
         }
     }
     std::vector<Token> tokenized;
-    std::string hello = "4 + 3 * 5 * 3 + 5";
+    // std::string hello = "4 + 3 * 5 * 3 + 5";
     Lexer lex(lines);
     Parser par;
-    // tokenized = lex.TokenizeLine(hello);
     lex.printLexer();
     std::cout << std::endl;
     par.parse(lex.getTokenizedCode());

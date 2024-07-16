@@ -48,7 +48,8 @@ public:
     std::string text;
     std::string type_string;
     void printToken() const { std::cout << type_string << ": " << text << std::endl; }
-    void printTokenWithoutEndl() const { std::cout << type_string << ": " << text << ", "; }
+    void printTokenWithoutEndl() const { std::cout << type_string << ": " << text << " "; }
+    std::pair<int, int> getPos() { return std::make_pair(startpos, endpos); }
 
     Token(int startpos = -1, int endpos = -1)
     {
@@ -72,23 +73,15 @@ class Lexer
 {
 private:
     std::vector<Token> tokenized_code;
-
+    int row = 0;
+    int col = 0;
 public:
     Lexer(){};
-    Lexer(std::vector<std::string> s)
-    {
-        for (auto &i : s)
-        {
-            for (auto &n : TokenizeLine(i))
-            {
-                tokenized_code.push_back(n);
-            }
-        }
-    }
+    Lexer(std::vector<std::string> s) { for (auto &i : s) TokenizeLine(i); }
     void assignTokenizedString();
     void printLexer();
     std::vector<Token> getTokenizedCode() { return tokenized_code; }
-    std::vector<Token> TokenizeLine(std::string &code);
+    std::vector<Token> TokenizeLine(const std::string &code);
 };
 
 #endif

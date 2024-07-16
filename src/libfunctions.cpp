@@ -6,7 +6,7 @@ void printvec(std::vector<std::string> &s)
 {
     for (auto i : s)
     {
-        std::cout << i << ", ";
+        std::cout << i << " ";
     }
     std::cout << std::endl;
 }
