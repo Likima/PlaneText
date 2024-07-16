@@ -57,6 +57,10 @@ int main(int argc, char **argv)
     Parser par;
     lex.printLexer();
     std::cout << std::endl;
-    par.parse(lex.getTokenizedCode());
+    if (!par.parse(lex.getTokenizedCode()))
+    {
+        std::cout << "Compilation terminated due to errors. " << std::endl;
+        return -1;
+    }
     return 0;
 }

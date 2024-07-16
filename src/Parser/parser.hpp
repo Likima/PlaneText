@@ -22,7 +22,7 @@ public:
 
     virtual Token getToken() const { return GenericTok; }
     virtual void printNode() const { GenericTok.printTokenWithoutEndl(); }
-    
+
     void setErr(std::shared_ptr<Error> e) { err = e; }
     std::shared_ptr<Error> getErr() { return err; }
 };
@@ -108,7 +108,7 @@ private:
     int token_idx = 0;
     Token current_token;
 
-    void advance();
+    std::shared_ptr<Error> advance();
 
     std::shared_ptr<GenericNode> factor();
     std::shared_ptr<GenericNode> term();
@@ -116,9 +116,9 @@ private:
     std::shared_ptr<GenericNode> binop(std::shared_ptr<GenericNode> (Parser::*func)(), const std::vector<TokenType> &op_types);
 
 public:
-    Parser() {};
+    Parser(){};
     void processTokens(std::vector<Token> tokens) { tokenList = tokens; }
-    void parse(std::vector<Token> tList);
+    bool parse(std::vector<Token> tList);
 };
 
 #endif // PARSER_HPP

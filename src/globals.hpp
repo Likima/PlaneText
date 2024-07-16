@@ -7,6 +7,8 @@
 #include <fstream>
 #include <memory>
 
+extern std::vector<std::string> lines;
+
 extern std::vector<std::string> splitBySpacesAndBrackets(const std::string &code);
 
 extern void printvec(std::vector<std::string> &s);
