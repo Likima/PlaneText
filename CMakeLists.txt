@@ -5,6 +5,9 @@ project(Qil)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Set build type to Debug
+set(CMAKE_BUILD_TYPE Debug)
+
 # Add source files
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE LEXER_SOURCES "src/Lexer/*.cpp")

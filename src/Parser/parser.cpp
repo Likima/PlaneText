@@ -38,16 +38,16 @@
 std::shared_ptr<Error> Parser::advance()
 {
     // used to parse each token individually.
-    if (this->token_idx < this->tokenList.size() - 2)
+    if (this->token_idx < this->tokenList.size() - 1)
     {
         this->token_idx++;
         this->current_token = tokenList[this->token_idx];
     }
-    else
-    {
-        // Expected arg
-        return std::make_shared<Error>(Error({current_token.getPos().first, current_token.getPos().second, "EXPECTED INT/FLOAT", "Binary operation expected a second argument."}));
-    }
+    // else
+    // {
+    //     // Expected arg
+    //     return std::make_shared<Error>(Error({current_token.getPos().first, current_token.getPos().second, "EXPECTED INT/FLOAT", "Binary operation expected a second argument."}));
+    // }
     return nullptr;
 }
 
@@ -60,7 +60,7 @@ std::shared_ptr<GenericNode> Parser::binop(std::shared_ptr<GenericNode> (Parser:
     while (std::find(op_types.begin(), op_types.end(), this->current_token.type) != op_types.end())
     {
         Token op = this->current_token;
-        std::shared_ptr<Error> e = advance()->getErr();
+        std::shared_ptr<Error> e = advance();
         if (e != nullptr)
         {
             left->setErr(e);
@@ -78,17 +78,34 @@ std::shared_ptr<GenericNode> Parser::binop(std::shared_ptr<GenericNode> (Parser:
 std::shared_ptr<GenericNode> Parser::factor()
 {
     Token tok = this->current_token;
-    std::shared_ptr<NumNode> NumTok = std::make_shared<NumNode>(tok);
+    std::shared_ptr<GenericNode> NumTok = std::make_shared<GenericNode>(tok);
+    std::shared_ptr<Error> e;
 
     if (tok.type == TT_INT || tok.type == TT_FLOAT)
     {
-        std::shared_ptr<Error> e = advance()->getErr();
+        *NumTok = NumNode(NumTok);
+        e = advance();
         if (e != nullptr)
             NumTok->setErr(e);
     }
+    else if (tok.type == TT_LPAREN) {
+        e = advance();
+        if (e != nullptr){
+            NumTok->setErr(e);
+            return NumTok;
+        }
+        NumTok = expr();
+        // Should recursively run until a RPAREN is hit.
+        if (current_token.type = TT_RPAREN) {
+            e = advance();
+            if (e != nullptr)
+                NumTok->setErr(e);
+        } else 
+            NumTok->setErr(std::make_shared<Error>(SyntaxErr({tok.getPos().first, tok.getPos().second, "INVALID SYNTAX", "Expected a ')'."})));
+    }
     else
     {
-        NumTok->setErr(std::make_shared<Error>(Error({tok.getPos().first, tok.getPos().second, "EXPECTED INT/FLOAT", "Binary operation expected a second argument."})));
+        NumTok->setErr(std::make_shared<Error>(Error({tok.getPos().first, tok.getPos().second, "EXPECTED EXPRESSION", "Binary operation expected a second argument."})));
         std::cout << "here!" << std::endl;
     }
     return NumTok;

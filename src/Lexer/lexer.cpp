@@ -127,7 +127,7 @@ std::vector<Token> Lexer::TokenizeLine(const std::string &code)
     std::vector<std::string> split_vec = splitBySpacesAndBrackets(code);
     for (const auto &word : split_vec)
     {
-        row+=word.length()+1; // + 1 to account for spaces ? 
+        row+=((word.length()+1)/2); // + 1 to account for spaces ? 
         Token t = tokenizeSingleWord(word, col, row);
         if (t.type != UNKNOWN)
             tokenized_code.push_back(t);

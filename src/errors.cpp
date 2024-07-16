@@ -5,7 +5,7 @@
 void printErrLines(int x_pos, int y_pos)
 {
     std::cout << lines[y_pos] << std::endl;
-    for (int x = 0; x < x_pos + 2; x++)
+    for (int x = 0; x < x_pos; x++)
     {
         std::cout << "-";
     }

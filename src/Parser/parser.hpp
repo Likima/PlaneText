@@ -36,6 +36,7 @@ private:
 public:
     NumNode(Token tok) : GenericNode(tok), NumNodeTok(tok) {} // Constructor
     ~NumNode() {}                                             // Destructor
+    NumNode(std::shared_ptr<GenericNode>& gn) : GenericNode(gn->getToken()), NumNodeTok(gn->getToken()) {}; 
 
     Token getToken() const override { return NumNodeTok; }
     void printNode() const override { NumNodeTok.printTokenWithoutEndl(); }

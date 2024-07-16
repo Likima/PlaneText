@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Qil",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Qil",  // Update the path if necessary
+            "args": ["${workspaceFolder}/build/hello.txt"],  // Add your command line arguments here
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build",
+            "miDebuggerPath": "/usr/bin/gdb",  // Update this path if necessary
+            "logging": {
+                "moduleLoad": false,
+                "programOutput": true,
+                "trace": false,
+                "engineLogging": false
+            }
+        }
+    ]
+}
