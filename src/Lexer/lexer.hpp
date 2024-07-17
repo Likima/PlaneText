@@ -1,10 +1,10 @@
 #ifndef LEXER_HPP
 #define LEXER_HPP
 
-#include <regex>
 #include "../globals.hpp"
+
+#include <regex>
 #include <variant>
-#include <string>
 
 enum TokenType
 {
@@ -48,7 +48,7 @@ public:
     std::string text;
     std::string type_string;
     void printToken() const { std::cout << type_string << ": " << text << std::endl; }
-    void printTokenWithoutEndl() const { std::cout << type_string << ": " << text << " "; }
+    void printTokenWithoutEndl() const { std::cout << " " << type_string << ": " << text; }
     std::pair<int, int> getPos() { return std::make_pair(startpos, endpos); }
 
     Token(int startpos = -1, int endpos = -1)

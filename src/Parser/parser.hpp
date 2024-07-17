@@ -22,6 +22,7 @@ public:
 
     virtual Token getToken() const { return GenericTok; }
     virtual void printNode() const { GenericTok.printTokenWithoutEndl(); }
+    virtual int getType() const { return GENERIC; }
 
     void setErr(std::shared_ptr<Error> e) { err = e; }
     std::shared_ptr<Error> getErr() { return err; }
@@ -40,6 +41,7 @@ public:
 
     Token getToken() const override { return NumNodeTok; }
     void printNode() const override { NumNodeTok.printTokenWithoutEndl(); }
+    int getType() const override { return NUM; }
 };
 
 class UnaryOpNode : public GenericNode
@@ -50,30 +52,13 @@ private:
 public:
     UnaryOpNode(Token tok) : GenericNode(tok), UnOpTok(tok){}; // Constructor
     ~UnaryOpNode() {}
+    UnaryOpNode(std::shared_ptr<GenericNode>& gn) : GenericNode(gn->getToken()), UnOpTok(gn->getToken()) {}; 
 
     Token getToken() const override { return UnOpTok; }
     void printNode() const override { UnOpTok.printTokenWithoutEndl(); }
+    int getType() const override { return UNARY; }
 };
 
-// class Wrapper : public GenericNode
-// {
-// private:
-//     std::shared_ptr<GenericNode> node;
-//     std::shared_ptr<Error> err;
-
-// public:
-//     Token getToken() const override { return node->getToken(); }
-//     void printNode() const override { node->getToken().printTokenWithoutEndl(); }
-
-//     Wrapper(){}; // Constructor
-//     std::shared_ptr<GenericNode> getNode() { return node; }
-//     std::shared_ptr<Error> getWrapperErr() { return err; }
-//     Wrapper &success(std::shared_ptr<GenericNode>);
-//     Wrapper &failure(std::shared_ptr<Error> e);
-//     std::shared_ptr<GenericNode> reg(std::variant<std::shared_ptr<GenericNode>, Wrapper>);
-// };
-
-// Classifies a BINARY OPERATION
 class BinOpNode : public GenericNode
 {
 private:
@@ -95,6 +80,7 @@ public:
         RNode->printNode();
         std::cout << " )";
     }
+    int getType() const override { return BIN; }
 
     std::shared_ptr<GenericNode> getLeftNode() const { return LNode; }
     std::shared_ptr<GenericNode> getRightNode() const { return RNode; }
@@ -106,6 +92,7 @@ class Parser
 {
 private:
     std::vector<Token> tokenList;
+    std::shared_ptr<GenericNode> ast;
     int token_idx = 0;
     Token current_token;
 
@@ -118,8 +105,10 @@ private:
 
 public:
     Parser(){};
+
     void processTokens(std::vector<Token> tokens) { tokenList = tokens; }
     bool parse(std::vector<Token> tList);
+    std::shared_ptr<GenericNode> getAST() { return ast; }
 };
 
 #endif // PARSER_HPP

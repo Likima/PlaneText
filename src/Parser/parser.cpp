@@ -1,37 +1,6 @@
 #include "parser.hpp"
 
 // ---------------------------
-// WRAPPER DEFINITIONS
-// ---------------------------
-
-// Wrapper &Wrapper::success(std::shared_ptr<GenericNode> node)
-// {
-//     this->node = node;
-//     return *this;
-// }
-
-// Wrapper &Wrapper::failure(std::shared_ptr<Error> e)
-// {
-//     this->err = e;
-//     return *this;
-// }
-
-// std::shared_ptr<GenericNode> Wrapper::reg(std::variant<std::shared_ptr<GenericNode>, Wrapper> v)
-// {
-//     if (std::holds_alternative<Wrapper>(v))
-//     {
-//         Wrapper wrapper = std::get<Wrapper>(v);
-//         auto err = wrapper.getWrapperErr()->getErr();
-//         if (err != nullptr)
-//         {
-//             this->err = err;
-//         }
-//         return wrapper.node;
-//     }
-//     return std::get<std::shared_ptr<GenericNode>>(v);
-// }
-
-// ---------------------------
 // PARSER DEFINITIONS
 // ---------------------------
 
@@ -43,11 +12,6 @@ std::shared_ptr<Error> Parser::advance()
         this->token_idx++;
         this->current_token = tokenList[this->token_idx];
     }
-    // else
-    // {
-    //     // Expected arg
-    //     return std::make_shared<Error>(Error({current_token.getPos().first, current_token.getPos().second, "EXPECTED INT/FLOAT", "Binary operation expected a second argument."}));
-    // }
     return nullptr;
 }
 
@@ -79,34 +43,31 @@ std::shared_ptr<GenericNode> Parser::factor()
 {
     Token tok = this->current_token;
     std::shared_ptr<GenericNode> NumTok = std::make_shared<GenericNode>(tok);
-    std::shared_ptr<Error> e;
 
+    if (tok.type == TT_ADD || tok.type == TT_SUB) {
+        *NumTok = UnaryOpNode(NumTok);
+        advance();        
+    }
     if (tok.type == TT_INT || tok.type == TT_FLOAT)
     {
         *NumTok = NumNode(NumTok);
-        e = advance();
-        if (e != nullptr)
-            NumTok->setErr(e);
+        advance();
     }
     else if (tok.type == TT_LPAREN) {
-        e = advance();
-        if (e != nullptr){
-            NumTok->setErr(e);
-            return NumTok;
-        }
+        advance();
         NumTok = expr();
         // Should recursively run until a RPAREN is hit.
         if (current_token.type = TT_RPAREN) {
-            e = advance();
-            if (e != nullptr)
-                NumTok->setErr(e);
+            advance();
         } else 
             NumTok->setErr(std::make_shared<Error>(SyntaxErr({tok.getPos().first, tok.getPos().second, "INVALID SYNTAX", "Expected a ')'."})));
     }
-    else
+    else if (token_idx >= tokenList.size())
     {
-        NumTok->setErr(std::make_shared<Error>(Error({tok.getPos().first, tok.getPos().second, "EXPECTED EXPRESSION", "Binary operation expected a second argument."})));
-        std::cout << "here!" << std::endl;
+        NumTok->setErr(std::make_shared<Error>(SyntaxErr({tok.getPos().first, tok.getPos().second, "UNEXPECTED EXPRESSION", "Invalid Synyax."})));
+    }
+    else {
+        NumTok->setErr(std::make_shared<Error>(Error({tok.getPos().first, tok.getPos().second, "EXPECTED INT/FLOAT", "Binary operation expected a second argument."})));   
     }
     return NumTok;
     // TODO : Handle brackets
@@ -139,6 +100,7 @@ bool Parser::parse(std::vector<Token> tList)
         return false;
     }
     result->printNode();
+    ast = result;
     std::cout << std::endl;
     return true;
     // add stuff here later

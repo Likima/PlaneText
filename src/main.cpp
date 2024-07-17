@@ -1,6 +1,7 @@
 #include "globals.hpp"
 #include "./Parser/parser.hpp"
 #include "./Lexer/lexer.hpp"
+#include "./Interpreter/interpreter.hpp"
 
 std::vector<std::string> lines = {};
 
@@ -52,7 +53,6 @@ int main(int argc, char **argv)
         }
     }
     std::vector<Token> tokenized;
-    // std::string hello = "4 + 3 * 5 * 3 + 5";
     Lexer lex(lines);
     Parser par;
     lex.printLexer();
@@ -62,5 +62,7 @@ int main(int argc, char **argv)
         std::cout << "Compilation terminated due to errors. " << std::endl;
         return -1;
     }
+    Interpreter inter(par.getAST());
+    std::cout<<std::get<int>(inter.Interpret())<<std::endl;
     return 0;
 }
