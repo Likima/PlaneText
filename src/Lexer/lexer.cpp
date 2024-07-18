@@ -103,27 +103,20 @@ void Lexer::assignTokenizedString()
 
 void Lexer::printLexer()
 {
-    for (auto &i : tokenized_code)
-        i.printTokenWithoutEndl();
+    for (auto &i : tokenized_code) i.printTokenWithoutEndl();
     std::cout<<std::endl;
 }
 
 Token tokenizeSingleWord(const std::string &word, int col, int row)
 {
     for (const auto &definition : TokenDefinitions)
-    {
         if (std::regex_match(word, definition.second))
-        {
             return Token(definition.first, word, col, row);
-        }
-    }
-    // Default case if no match found
-    return {UNKNOWN, word}; // Assuming it's an identifier if not matched (CLASSIFIES SPACES)
+    return {UNKNOWN, word};
 }
 
 std::vector<Token> Lexer::TokenizeLine(const std::string &code)
 {
-    std::sregex_iterator end;
     std::vector<std::string> split_vec = splitBySpacesAndBrackets(code);
     for (const auto &word : split_vec)
     {

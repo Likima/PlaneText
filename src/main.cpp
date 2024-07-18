@@ -42,7 +42,17 @@ bool read_from_file(std::string &file_name)
 
 int main(int argc, char **argv)
 {
+    //========================
+    // INITIAL DECLARATIONS
+    //========================
+
     std::string save_file;
+    std::vector<Token> tokenized;
+
+    //========================
+    // READ FROM FILE
+    //========================
+
     if (argc >= 2)
     {
         save_file = argv[1];
@@ -52,7 +62,11 @@ int main(int argc, char **argv)
             return -1;
         }
     }
-    std::vector<Token> tokenized;
+
+    //========================
+    // INSTANTIATE CLASSES
+    //========================
+
     Lexer lex(lines);
     Parser par;
     lex.printLexer();

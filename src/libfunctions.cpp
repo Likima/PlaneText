@@ -12,6 +12,7 @@ void printvec(std::vector<std::string> &s)
 #include <string>
 #include <vector>
 #include <cctype>
+#include <fstream>
 
 std::vector<std::string> splitBySpacesAndBrackets(const std::string &code)
 {
@@ -92,7 +93,7 @@ std::vector<std::string> splitBySpacesAndBrackets(const std::string &code)
             continue;
         }
 
-        if (c == '(' || c == ')' || c == '{' || c == '}' || c == ',' || c == '.' || c == '*' || c == '&')
+        if (c == '(' || c == ')' || c == '{' || c == '}' || c == ',' || c == '.' || c == '*' || c == '&' || c == '+' || c == '-' || c == '/')
         {
             if (!currentString.empty())
             {

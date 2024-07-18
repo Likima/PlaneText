@@ -6,7 +6,7 @@
 
 std::shared_ptr<Error> Parser::advance()
 {
-    // used to parse each token individually.
+    // Advances the current token to the next one sequentially.
     if (this->token_idx < this->tokenList.size() - 1)
     {
         this->token_idx++;
@@ -17,6 +17,7 @@ std::shared_ptr<Error> Parser::advance()
 
 std::shared_ptr<GenericNode> Parser::binop(std::shared_ptr<GenericNode> (Parser::*func)(), const std::vector<TokenType> &op_types)
 {
+    // Recursively processes binary operations (+, -, /, *)
     std::shared_ptr<GenericNode> left = (this->*func)();
     if (left->getErr() != nullptr)
         return left;
@@ -41,6 +42,8 @@ std::shared_ptr<GenericNode> Parser::binop(std::shared_ptr<GenericNode> (Parser:
 
 std::shared_ptr<GenericNode> Parser::factor()
 {
+    // Used to generate a leaf node for the ast. (Unary operation / Number)
+    // TODO: ADD STRING SUPPORT (concat.)
     Token tok = this->current_token;
     std::shared_ptr<GenericNode> NumTok = std::make_shared<GenericNode>(tok);
 
@@ -75,17 +78,19 @@ std::shared_ptr<GenericNode> Parser::factor()
 
 std::shared_ptr<GenericNode> Parser::term()
 {
+    // Groups factors to make a term
     return binop(&Parser::factor, {TT_MUL, TT_DIV});
 }
 
 std::shared_ptr<GenericNode> Parser::expr()
 {
+    // Groups terms to make an expression
     return binop(&Parser::term, {TT_ADD, TT_SUB});
 }
 
 bool Parser::parse(std::vector<Token> tList)
 {
-    // TODO: refactor to make return bool on success/failure
+    // Generates expression.
     if (tList.empty())
         return false;
 

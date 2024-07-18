@@ -12,7 +12,7 @@ void printErrLines(int x_pos, int y_pos)
     std::cout << "^ HERE" << std::endl;
 }
 
-void Error::printErr()
+void Error::printErr() const
 {
     std::string result;
     result = error_name + ": " + details + "\n";

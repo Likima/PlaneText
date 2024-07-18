@@ -46,7 +46,7 @@ private:
 public:
     TokenType type;
     std::string text;
-    std::string type_string;
+    std::string type_string; // TODO: This is scuffed. Make private if time permits and add get/set functions.
     void printToken() const { std::cout << type_string << ": " << text << std::endl; }
     void printTokenWithoutEndl() const { std::cout << " " << type_string << ": " << text; }
     std::pair<int, int> getPos() { return std::make_pair(startpos, endpos); }

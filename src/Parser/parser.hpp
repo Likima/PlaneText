@@ -28,8 +28,7 @@ public:
     std::shared_ptr<Error> getErr() { return err; }
 };
 
-// Classifies a Number Node
-class NumNode : public GenericNode
+class NumNode : public GenericNode // Classifies Numbers
 {
 private:
     Token NumNodeTok;
@@ -44,7 +43,7 @@ public:
     int getType() const override { return NUM; }
 };
 
-class UnaryOpNode : public GenericNode
+class UnaryOpNode : public GenericNode // Classifies individual non-binary (as in not binary) operations
 {
 private:
     Token UnOpTok;
@@ -59,7 +58,7 @@ public:
     int getType() const override { return UNARY; }
 };
 
-class BinOpNode : public GenericNode
+class BinOpNode : public GenericNode // Classifies Operators that point to different nodes.
 {
 private:
     Token BinOpTok;
@@ -104,11 +103,12 @@ private:
     std::shared_ptr<GenericNode> binop(std::shared_ptr<GenericNode> (Parser::*func)(), const std::vector<TokenType> &op_types);
 
 public:
-    Parser(){};
+    Parser(){}; // Default Constructor
 
-    void processTokens(std::vector<Token> tokens) { tokenList = tokens; }
+    void processTokens(std::vector<Token> tokens) const { tokenList = tokens; }
+    std::shared_ptr<GenericNode> getAST() const { return ast; }
+
     bool parse(std::vector<Token> tList);
-    std::shared_ptr<GenericNode> getAST() { return ast; }
 };
 
 #endif // PARSER_HPP

@@ -1,12 +1,16 @@
 #include "interpreter.hpp"
 #include <iostream>
 
+void Interpreter::setErr(std::shared_ptr<Error> e) {
+    err = e;
+}
+
 void Interpreter::Advance() {
     // Implementation if needed
     return;
 }
 
-std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> current_node) const {
+std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> current_node) {
     if (!current_node) current_node = this->ast;
     if (!current_node) return 0;
     const std::string& text = current_node->getToken().text;
@@ -22,6 +26,7 @@ std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> cur
         auto binaryNode = std::dynamic_pointer_cast<BinOpNode>(current_node);
         if (!binaryNode) {
             // Handle error: current_node is not a BinaryNode
+            setErr(std::make_shared<Error>(Error({current_node->getToken().getPos().first, current_node->getToken().getPos().second, "UNKNOWN ERROR", "Not really sure how this error is possible"})));
             return -1;
         }
 
@@ -29,7 +34,7 @@ std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> cur
         auto right = Interpret(binaryNode->getRightNode());
 
         if (left.index() != right.index()) {
-            // Placeholder error return; throw an exception or handle error properly
+            setErr(std::make_shared<Error>(IlglCompare({current_node->getToken().getPos().first, current_node->getToken().getPos().second, "Illegal Compare", "Cannot compare two different types"})));
             return -1;
         }
 
@@ -55,7 +60,7 @@ std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> cur
                 else
                     return std::get<float>(left) / std::get<float>(right);
             default:
-                // Placeholder error return; throw an exception or handle error properly
+                setErr(std::make_shared<Error>(Error({current_node->getToken().getPos().first, current_node->getToken().getPos().second, "UNKNOWN ERROR", "Not really sure how this error is possible"})));
                 return -1;
         }
     }

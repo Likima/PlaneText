@@ -14,7 +14,7 @@ public:
     Error() = default;
     Error(int ps, int pe, std::string en, std::string dt)
         : pos_start(ps), pos_end(pe), error_name(en), details(dt) {}
-    void printErr();
+    virtual void printErr() const;
     virtual std::shared_ptr<Error> getErr()
     {
         if (pos_start == -1 && pos_end == -1)
@@ -34,6 +34,10 @@ public:
             return nullptr;
         return shared_from_this();
     }
+    void printErr() const override {
+        std::cout<<"ILLEGAL CHAR ERROR"<<std::endl;
+        Error::printErr();
+    }
 };
 
 class SyntaxErr : public Error
@@ -46,6 +50,27 @@ public:
         if (pos_start == -1 && pos_end == -1)
             return nullptr;
         return shared_from_this();
+    }
+    void printErr() const override {
+        std::cout<<"SYNTAX ERROR"<<std::endl;
+        Error::printErr();
+    }
+};
+
+class IlglCompare : public Error 
+{
+public:
+    IlglCompare(int ps, int pe, std::string en, std::string dt)
+        : Error(ps, pe, en, dt) {}    
+    std::shared_ptr<Error> getErr() override
+    {
+        if (pos_start == -1 && pos_end == -1)
+            return nullptr;
+        return shared_from_this();
+    }
+    void printErr() const override {
+        std::cout<<"CANNOTE COMPARE VALUES OF DIFFERENT TYPES"<<std::endl;
+        Error::printErr();
     }
 };
 

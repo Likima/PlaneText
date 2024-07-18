@@ -8,12 +8,6 @@
 #include <memory>
 #include <variant>
 
-enum NodeType {
-    GENERIC,
-    NUM,
-    UNARY,
-    BIN,
-};
 
 extern std::vector<std::string> lines;
 
