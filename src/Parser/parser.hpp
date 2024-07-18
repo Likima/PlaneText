@@ -22,7 +22,6 @@ public:
 
     virtual Token getToken() const { return GenericTok; }
     virtual void printNode() const { GenericTok.printTokenWithoutEndl(); }
-    virtual int getType() const { return GENERIC; }
 
     void setErr(std::shared_ptr<Error> e) { err = e; }
     std::shared_ptr<Error> getErr() { return err; }
@@ -40,7 +39,6 @@ public:
 
     Token getToken() const override { return NumNodeTok; }
     void printNode() const override { NumNodeTok.printTokenWithoutEndl(); }
-    int getType() const override { return NUM; }
 };
 
 class UnaryOpNode : public GenericNode // Classifies individual non-binary (as in not binary) operations
@@ -55,15 +53,14 @@ public:
 
     Token getToken() const override { return UnOpTok; }
     void printNode() const override { UnOpTok.printTokenWithoutEndl(); }
-    int getType() const override { return UNARY; }
 };
 
 class BinOpNode : public GenericNode // Classifies Operators that point to different nodes.
 {
 private:
     Token BinOpTok;
-    std::shared_ptr<GenericNode> LNode;
-    std::shared_ptr<GenericNode> RNode;
+    std::shared_ptr<GenericNode> LNode = nullptr;
+    std::shared_ptr<GenericNode> RNode = nullptr;
 
 public:
     BinOpNode(Token tok, std::shared_ptr<GenericNode> left, std::shared_ptr<GenericNode> right)
@@ -79,7 +76,6 @@ public:
         RNode->printNode();
         std::cout << " )";
     }
-    int getType() const override { return BIN; }
 
     std::shared_ptr<GenericNode> getLeftNode() const { return LNode; }
     std::shared_ptr<GenericNode> getRightNode() const { return RNode; }
@@ -105,7 +101,7 @@ private:
 public:
     Parser(){}; // Default Constructor
 
-    void processTokens(std::vector<Token> tokens) const { tokenList = tokens; }
+    void processTokens(std::vector<Token> tokens) { tokenList = tokens; }
     std::shared_ptr<GenericNode> getAST() const { return ast; }
 
     bool parse(std::vector<Token> tList);

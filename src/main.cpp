@@ -77,6 +77,6 @@ int main(int argc, char **argv)
         return -1;
     }
     Interpreter inter(par.getAST());
-    std::cout<<std::get<int>(inter.Interpret())<<std::endl;
+    inter.Interpret();
     return 0;
 }

@@ -10,7 +10,7 @@ void Interpreter::Advance() {
     return;
 }
 
-std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> current_node) {
+std::variant<int, float> Interpreter::InterpretNum(std::shared_ptr<GenericNode> current_node) {
     if (!current_node) current_node = this->ast;
     if (!current_node) return 0;
     const std::string& text = current_node->getToken().text;
@@ -30,8 +30,8 @@ std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> cur
             return -1;
         }
 
-        auto left = Interpret(binaryNode->getLeftNode());
-        auto right = Interpret(binaryNode->getRightNode());
+        auto left = InterpretNum(binaryNode->getLeftNode());
+        auto right = InterpretNum(binaryNode->getRightNode());
 
         if (left.index() != right.index()) {
             setErr(std::make_shared<Error>(IlglCompare({current_node->getToken().getPos().first, current_node->getToken().getPos().second, "Illegal Compare", "Cannot compare two different types"})));
@@ -64,6 +64,44 @@ std::variant<int, float> Interpreter::Interpret(std::shared_ptr<GenericNode> cur
                 return -1;
         }
     }
-    // Placeholder error return; throw an exception or handle error properly
+    setErr(std::make_shared<Error>(IlglCompare({current_node->getToken().getPos().first, current_node->getToken().getPos().second, "Invalid Typename", "Non int/float detected"})));
     return 0;
+}
+
+bool Interpreter::Interpret(std::shared_ptr<GenericNode> current_node) {
+    if(!ast) {
+        std::cout << "AST NOT ASSIGNED!!!" << std::endl;
+        return false;
+    }
+    if(!current_node) current_node = ast;
+    switch(current_node->getToken().type) {
+        case(TT_ADD):
+        case(TT_MUL):
+        case(TT_SUB):
+        case(TT_DIV): {
+            auto binaryNode = std::dynamic_pointer_cast<BinOpNode>(current_node);
+            std::shared_ptr<GenericNode> left = binaryNode->getLeftNode();
+            std::shared_ptr<GenericNode> right = binaryNode->getRightNode();
+            if(!left || !right) {
+                std::cout<<"Invalid Type Conversion"<<std::endl; // Maybe attach error here? Idk yet
+                return false;
+            }
+            return Interpret(left);
+            break;
+        }
+        case(TT_INT):
+        case(TT_FLOAT):
+            std::cout<<std::get<int>(InterpretNum(ast))<<std::endl; // Properly handle with commands later.
+            break;
+        default:
+            std::cout<<"this is the default"<<std::endl;
+            return false;
+    }
+    if (err != nullptr) {
+        std::cout<<"Errors Detected"<<std::endl;
+        err->printErr();
+        return false;
+    }
+    return true;
+
 }
